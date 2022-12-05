@@ -1,0 +1,42 @@
+
+🩺 Health-Check Backup
+🗓️ 05/12/2022
+
+🔷 Infraestrutura
+(AVAMAR E VEEAM)
+
+RJ1
+✅ Área Ocupada: 70%
+ℹ️ Área Livre: 49.9 TB
+ℹ️ Crescimento/dia: 1.3 TB
+
+RJ2
+✅ Área Ocupada: 88%
+ℹ️ Área Livre: 20 TB
+ℹ️ Crescimento/dia: 0.8 TB
+
+🔷 Replicação AWS
+
+✅ RJ1 Executado: 100%
+ℹ️ Dt última: dd/mm/yyyy veriricar qual data considerar
+✅ Área Livre: 19%
+
+✅ RJ2 executado: 100%
+ℹ️ Dt última: dd/mm/yyyy veriricar qual data considerar
+✅ Área Livre: 1%
+
+
+🔷 Execuções Data Center
+
+ℹ️ JOBS RJ1: 4150
+ℹ️ Executado: verificar como considerar o campo%
+
+ℹ️ JOBS RJ2: 2968
+ℹ️ Executado: verificar como considerar o campo%
+
+
+🔷 Execuções Unidades
+
+✅ Escopo: 78 Locais
+ℹ️ Sucesso: verificar como é considerado os status%
+

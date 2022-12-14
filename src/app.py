@@ -32,7 +32,7 @@ def main_btn_event_handler ():
       feedback_label.config (text = 'Erro! Não foi possível abrir o arquivo.')
 
     except:
-      feedback_label.config (text = 'Erro desconhecido.')
+      feedback_label.config (text = 'Erro ao fazer o parser do arquivo selecionado.\nVerificar se a planilha está no formato que foi desenvolvido.')
     
     else:
       feedback_label.config (text = 'Healthcheck Gerado com Sucesso!!')
@@ -43,8 +43,12 @@ def main_btn_event_handler ():
   
   threading.Thread (target = run_sub).start ()
 
-def send_msg_btn_event_handler ():
+def send_msg_btn_event_handler (event = None):
   def run_sub ():
+    if send_msg_btn ['state'] == DISABLED:
+        feedback_label.config (text = 'O envio de mensagens ao Teams está desabilitado.\nNão foi possível ler o arquivo de configuração.')
+        return
+
     try:
       feedback_label.config (text = 'Enviando mensagem...')
       cli.send_teams_message (text_box_output.get ('1.0', END))
@@ -110,6 +114,7 @@ send_msg_btn = Button (
   state = DISABLED,
   command = send_msg_btn_event_handler
 )
+send_msg_btn.bind ('<Button-1>', send_msg_btn_event_handler)
 send_msg_btn.place (x = 15, y = 490)
 
 if cli.ms_teams_webhook:

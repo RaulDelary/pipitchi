@@ -164,12 +164,23 @@ def cli ():
 
 try:
   configs = ConfigParser ()
-  configs.read (filenames = './app.ini', encoding = 'UTF-8')
+  
+  with (open ('./app.ini', 'r', encoding = 'UTF-8')) as config_file:
+    configs.read (filenames = './app.ini', encoding = 'UTF-8')
+    configs.read_file (f = config_file)
 
   ms_teams_webhook = configs ['connectors']['teams_webhook']
 
 except KeyError:
-  print (f'Não foi possível carregar o arquivo de configuração. Webhook do Teams não será utilizado')
+  print ('Não foi possível reconhecer a URL do webhook no arquivo de configuração. Verifique a formatação do arquivo.')
+
+except IOError:
+  print ('Não foi possível encontrar o arquivo de configuração.')
+  config_file_template = '[connectors]\nteams_webhook = <teams-webhook-url>'
+  
+  with (open ('./app.ini', 'w', encoding = 'UTF-8')) as config_file:
+    config_file.write (config_file_template)
+
 
 
 

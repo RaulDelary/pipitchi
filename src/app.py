@@ -79,7 +79,6 @@ def quit_btn_event_handler ():
 
 
 
-
 main_btn = Button (
   root,
   text = 'Selecionar Planilha',

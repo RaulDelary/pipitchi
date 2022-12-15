@@ -1,4 +1,4 @@
-name: Package exe with PyInstaller - Windows
+name: Package Application with Pyinstaller
 
 on:
   push:
@@ -13,12 +13,13 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: PyInstaller Windows
+
+    - name: Package Application
       uses: JackMcKew/pyinstaller-action-windows@main
       with:
-        path: src/
+        path: .
 
     - uses: actions/upload-artifact@v2
       with:
-        name: health-check-extractor
+        name: name-of-artifact
         path: src/dist/app

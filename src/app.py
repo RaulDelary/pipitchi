@@ -55,7 +55,7 @@ def send_msg_btn_event_handler (event = None):
       feedback_label.config (text = 'Mensagem enviada!')
 
     except:
-      feedback_label.config (text = 'Erro ao enviar mensagem ao Teams.\nVerifique sua URL do Webhook ou suas configurações de rede.')
+      feedback_label.config (text = 'Erro ao enviar mensagem ao Teams.\nVerifique sua URL do Webhook no arquivo de configuração ou suas configurações de rede.')
 
   threading.Thread (target = run_sub).start ()
 

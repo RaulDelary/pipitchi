@@ -131,7 +131,7 @@ def open_wb (file_name): # Retorna Worksheet
     wb = load_workbook (filename = file_name, data_only = True)
   
   except FileNotFoundError:
-    return f'Não foi possível abrir o arquivo {file_name}. Verifique se o caminho do arquivo está correto.'
+    return f'FATAL: Não foi possível abrir o arquivo {file_name}. Verifique se o caminho do arquivo está correto.'
 
   return wb
 
@@ -141,13 +141,13 @@ def cli ():
     wb = load_workbook (filename = file_name, data_only = True)
 
   except FileNotFoundError:
-    print (f'Não foi possível abrir o arquivo {file_name}. Verifique se o caminho do arquivo está correto.')
-    exit (1)
+    print (f'ERRO: Não foi possível abrir o arquivo {file_name}. Verifique se o caminho do arquivo está correto.')
+    sys.exit (1)
 
   except IndexError:
     # To Do: Implement usage function.
-    print (f'Nome do arquivo de entrada não foi informado.')
-    exit (1)
+    print (f'ERRO: Nome do arquivo de entrada não foi informado.')
+    sys.exit (1)
 
   ws = wb.active
 
@@ -158,6 +158,7 @@ def cli ():
 
   try:
     send_teams_message (emojized_output)
+
   except:
     print ('Não foi possível utilizar o webhook. Verifique se o endpoint está correto ou verifique as suas configurações de rede.')
 
@@ -175,7 +176,7 @@ except KeyError:
   print ('Não foi possível reconhecer a URL do webhook no arquivo de configuração. Verifique a formatação do arquivo.')
 
 except IOError:
-  print ('Não foi possível encontrar o arquivo de configuração.')
+  print ('Não foi possível encontrar o arquivo de configuração. Webhook do teams não será utilizado.')
   config_file_template = '[connectors]\nteams_webhook = <teams-webhook-url>'
   
   with (open ('./app.ini', 'w', encoding = 'UTF-8')) as config_file:

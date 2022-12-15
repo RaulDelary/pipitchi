@@ -1,5 +1,5 @@
 # -*- mode: python ; coding: utf-8 -*-
-
+import shutil
 
 block_cipher = None
 
@@ -10,6 +10,8 @@ a = Analysis(
     binaries=[],
     datas=[],
     hiddenimports=[],
+    hookspath=[],
+    hooksconfig={},
     runtime_hooks=[],
     excludes=[],
     win_no_prefer_redirects=False,
@@ -46,3 +48,5 @@ coll = COLLECT(
     upx_exclude=[],
     name='app',
 )
+
+shutil.copyfile('app.ini', '{0}/app/app.ini'.format(DISTPATH))

@@ -41,4 +41,4 @@ exe = EXE(
     entitlements_file=None,
 )
 
-shutil.copyfile('app.ini', '{0}/app/app.ini'.format(DISTPATH))
+shutil.copyfile('app.ini', '{0}/app.ini'.format(DISTPATH))

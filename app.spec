@@ -32,23 +32,23 @@ app_pkg = Analysis(
     noarchive=False,
 )
 
-app_cli = Analysis(
-    ['src\\cli.py'],
-    pathex=[],
-    binaries=[],
-    datas=[],
-    hiddenimports=[],
-    runtime_hooks=[],
-    excludes=[],
-    win_no_prefer_redirects=False,
-    win_private_assemblies=False,
-    cipher=block_cipher,
-    noarchive=False,
-)
+# app_cli = Analysis(
+#     ['src\\cli.py'],
+#     pathex=[],
+#     binaries=[],
+#     datas=[],
+#     hiddenimports=[],
+#     runtime_hooks=[],
+#     excludes=[],
+#     win_no_prefer_redirects=False,
+#     win_private_assemblies=False,
+#     cipher=block_cipher,
+#     noarchive=False,
+# )
 
 app_standalone_pyz = PYZ(app_standalone.pure, app_standalone.zipped_data, cipher=block_cipher)
 app_pkg_pyz = PYZ(app_pkg.pure, app_pkg.zipped_data, cipher=block_cipher)
-app_cli_pyz = PYZ(app_cli.pure, app_cli.zipped_data, cipher=block_cipher)
+# app_cli_pyz = PYZ(app_cli.pure, app_cli.zipped_data, cipher=block_cipher)
 
 app_standalone_exe = EXE(
     app_standalone_pyz,
@@ -90,27 +90,27 @@ app_pkg_exe = EXE(
     entitlements_file=None,
 )
 
-app_cli_exe = EXE(
-    app_cli_pyz,
-    app_cli.scripts,
-    app_cli.binaries,
-    app_cli.zipfiles,
-    app_cli.datas,
-    [],
-    name='app_cli',
-    debug=False,
-    bootloader_ignore_signals=False,
-    strip=False,
-    upx=True,
-    upx_exclude=[],
-    runtime_tmpdir=None,
-    console=True,
-    disable_windowed_traceback=False,
-    argv_emulation=False,
-    target_arch=None,
-    codesign_identity=None,
-    entitlements_file=None,
-)
+# app_cli_exe = EXE(
+#     app_cli_pyz,
+#     app_cli.scripts,
+#     app_cli.binaries,
+#     app_cli.zipfiles,
+#     app_cli.datas,
+#     [],
+#     name='app_cli',
+#     debug=False,
+#     bootloader_ignore_signals=False,
+#     strip=False,
+#     upx=True,
+#     upx_exclude=[],
+#     runtime_tmpdir=None,
+#     console=True,
+#     disable_windowed_traceback=False,
+#     argv_emulation=False,
+#     target_arch=None,
+#     codesign_identity=None,
+#     entitlements_file=None,
+# )
 
 coll = COLLECT(
     app_pkg_exe,
@@ -126,6 +126,5 @@ coll = COLLECT(
 
 shutil.copyfile ('app.ini', f'{DISTPATH}/app.ini')
 shutil.copyfile ('app.ini', f'{DISTPATH}/app_pkg/app.ini')
-
 shutil.make_archive (f'{DISTPATH}/app_pkg', 'zip', f'{DISTPATH}/app_pkg')
 

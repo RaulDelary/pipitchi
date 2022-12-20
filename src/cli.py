@@ -30,7 +30,7 @@ def __conditional_emoji (rule, value = 0):
 def __conditional_string (rule, value = 0):
   match rule:
     case 1:
-      return 'Crescimento nas últimas 24h:' if value >= 0 else 'Redução nas últimas 24h'
+      return 'Crescimento nas últimas 24h' if value >= 0 else 'Redução nas últimas 24h'
     
     case 2:
       date_str = value.split ('\n') [0].split () [2]

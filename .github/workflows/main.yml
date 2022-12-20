@@ -18,12 +18,7 @@ jobs:
       with:
         path: .
 
-    # - uses: actions/upload-artifact@v2
-    #   with:
-    #     name: app
-    #     path: dist/windows/app-onefile.exe
-
     - uses: ncipollo/release-action@v1
       with:
         artifacts: "dist/windows/*.exe,dist/windows/*.zip"
-        tag: v1.0.2
+        tag: v1.1.0

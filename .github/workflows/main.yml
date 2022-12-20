@@ -21,4 +21,4 @@ jobs:
     - uses: ncipollo/release-action@v1
       with:
         artifacts: "dist/windows/*.exe,dist/windows/*.zip"
-        tag: v1.1.0
+        tag: v1.1.1

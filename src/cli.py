@@ -10,7 +10,7 @@ global ms_teams_webhook
 ms_teams_webhook = None
 
 
-def __conditional_emoji__ (rule, value = 0):
+def __conditional_emoji (rule, value = 0):
   match rule:
     case 1:
       return ':check_mark_button:' if value <= 79 else ':warning:' if value > 79 and value <= 90 else ':hollow_red_circle:'
@@ -27,14 +27,17 @@ def __conditional_emoji__ (rule, value = 0):
     case 5:
       return ':hollow_red_circle:' if 'Falha' in value else ':warning:' if 'Parcial' in value else ':check_mark_button:'
 
-def __conditional_string__ (rule, value = 0):
+def __conditional_string (rule, value = 0):
   match rule:
     case 1:
-      return 'Crescimento/dia' if value >= 0 else 'Redução nas últimas 24h'
+      return 'Crescimento nas últimas 24h:' if value >= 0 else 'Redução nas últimas 24h'
     
     case 2:
       date_str = value.split ('\n') [0].split () [2]
       return f'{date_str [8:]}/{date_str [5:7]}/{date_str [0:4]}'
+
+    case 3:
+      return f'{value}%' if value > 10 else f'{value}%, processo de Cleaning em execução.'
 
 def format_message (ws):
   msg_template = '''
@@ -57,11 +60,11 @@ RJ2
 {em10} Replicação AWS
   {em11} RJ1 Executado: {rep_aws_executado_rj1}%
   {em12} Dt última: {rep_aws_ultima_rj1}
-  {em13} Área Livre: {rep_aws_livre_rj1}%
+  {em13} Área Livre: {rep_aws_livre_rj1}
 
   {em14} RJ2 executado: {rep_aws_executado_rj2}%
   {em15} Dt última: {rep_aws_ultima_rj2}
-  {em16} Área Livre: {rep_aws_livre_rj2}%
+  {em16} Área Livre: {rep_aws_livre_rj2}
 
 
 {em17} Execuções Data Center
@@ -77,44 +80,50 @@ RJ2
   {em24} Sucesso: {pct_sucesso_total:.2f}%
 '''
 
-  status_column = tuple (ws.iter_cols (min_col = 4, max_col = 4, min_row = 8, values_only = True)) [0]
-  count_units = len (status_column)
-  count_valid_units = len ([x for x in status_column if x != 'Sem backup no dia'])
-  count_success = len ([x for x in status_column if x == 'Sucesso'])
-  unit_success_pct = (count_success / count_units) * 100
+  column_d_generator = ws.iter_cols (min_col = 4, max_col = 4, min_row = 8, values_only = True)
+  
+  valid_status = ['sucesso', 'parcial', 'falha', 'em construção']
+
+  status_column = list (list (column_d_generator) [0])
+  filtered_status = [str (x).lower () for x in status_column if str (x).lower () in valid_status]
+
+  total_units = len (filtered_status)
+  total_success = len ([x for x in filtered_status if x == 'sucesso'])
+  
+  total_success_pct = (total_success / total_units) * 100
 
   return msg_template.format (
   em01 = ':stethoscope:',
   em02 = ':spiral_calendar:', data_hora = datetime.now ().strftime ('%d/%m/%Y'),
 
   em03 = ':large_blue_diamond:',
-  em04 = __conditional_emoji__ (1, ws ['O3'].value * 100), area_ocupada_rj1 = int (ws ['O3'].value * 100),
+  em04 = __conditional_emoji (1, ws ['O3'].value * 100), area_ocupada_rj1 = int (ws ['O3'].value * 100),
   em05 = ':information:', area_livre_rj1 = ws ['I3'].value,
-  em06 = ':information:', cres_dec_str_rj1 = __conditional_string__ (1, ws ['J3'].value), cres_dec_value_rj1 = ws ['J3'].value,
+  em06 = ':information:', cres_dec_str_rj1 = __conditional_string (1, ws ['J3'].value), cres_dec_value_rj1 = ws ['J3'].value,
 
-  em07 = __conditional_emoji__ (1, ws ['O4'].value * 100), area_ocupada_rj2 = int (ws ['O4'].value * 100),
+  em07 = __conditional_emoji (1, ws ['O4'].value * 100), area_ocupada_rj2 = int (ws ['O4'].value * 100),
   em08 = ':information:', area_livre_rj2 = ws ['I4'].value,
-  em09 = ':information:', cres_dec_str_rj2 = __conditional_string__ (1, ws ['J4'].value), cres_dec_value_rj2 = ws ['J4'].value,
+  em09 = ':information:', cres_dec_str_rj2 = __conditional_string (1, ws ['J4'].value), cres_dec_value_rj2 = ws ['J4'].value,
 
   em10 = ':large_blue_diamond:',
-  em11 = __conditional_emoji__ (2, ws ['G3'].value * 100), rep_aws_executado_rj1 = ws ['G3'].value * 100,
-  em12 = ':information:', rep_aws_ultima_rj1 = __conditional_string__ (2, ws ['H3'].value),
-  em13 = __conditional_emoji__ (3, ws ['K3'].value), rep_aws_livre_rj1 = ws ['K3'].value,
+  em11 = __conditional_emoji (2, ws ['G3'].value * 100), rep_aws_executado_rj1 = ws ['G3'].value * 100,
+  em12 = ':information:', rep_aws_ultima_rj1 = __conditional_string (2, ws ['H3'].value),
+  em13 = __conditional_emoji (3, ws ['K3'].value), rep_aws_livre_rj1 = __conditional_string (3, ws ['K3'].value),
 
-  em14 = __conditional_emoji__ (2, ws ['G4'].value * 100), rep_aws_executado_rj2 = ws ['G4'].value * 100,
-  em15 = ':information:', rep_aws_ultima_rj2 = __conditional_string__ (2, ws ['H4'].value),
-  em16 = __conditional_emoji__ (3, ws ['K4'].value), rep_aws_livre_rj2 = ws ['K4'].value,
+  em14 = __conditional_emoji (2, ws ['G4'].value * 100), rep_aws_executado_rj2 = ws ['G4'].value * 100,
+  em15 = ':information:', rep_aws_ultima_rj2 = __conditional_string (2, ws ['H4'].value),
+  em16 = __conditional_emoji (3, ws ['K4'].value), rep_aws_livre_rj2 = __conditional_string (3, ws ['K4'].value),
 
   em17 = ':large_blue_diamond:',
   em18 = ':information:', jobs_rj1 = ws ['N3'].value,
-  em19 = __conditional_emoji__ (4, ws ['E3'].value * 100), jobs_executado_rj1 = ws ['E3'].value * 100,
+  em19 = __conditional_emoji (4, ws ['E3'].value * 100), jobs_executado_rj1 = ws ['E3'].value * 100,
 
   em20 = ':information:', jobs_rj2 = ws ['N4'].value,
-  em21 = __conditional_emoji__ (4, ws ['E4'].value * 100), jobs_executado_rj2 = ws ['E4'].value * 100,
+  em21 = __conditional_emoji (4, ws ['E4'].value * 100), jobs_executado_rj2 = ws ['E4'].value * 100,
 
   em22 = ':large_blue_diamond:',
-  em23 = __conditional_emoji__ (5, status_column), count_units = count_units,
-  em24 = ':information:', pct_sucesso_total = unit_success_pct
+  em23 = __conditional_emoji (5, filtered_status), count_units = total_units,
+  em24 = ':information:', pct_sucesso_total = total_success_pct
 )
 
 def send_teams_message (message):

@@ -1,5 +1,6 @@
 # -*- mode: python ; coding: utf-8 -*-
 import shutil
+import os
 
 block_cipher = None
 
@@ -124,7 +125,12 @@ coll = COLLECT(
 
 )
 
-shutil.copyfile ('app.ini', f'{DISTPATH}/app.ini')
-shutil.copyfile ('app.ini', f'{DISTPATH}/app_pkg/app.ini')
+if not os.path.exists ('./dist/bin'):
+    os.mkdir ('./dist/bin')
+
+shutil.copyfile ('./src/app.ini', f'{DISTPATH}/bin/app.ini')
+shutil.copyfile ('./src/app.ini', f'{DISTPATH}/app_pkg/app.ini')
+shutil.copyfile (f'{DISTPATH}/app_standalone.exe', f'{DISTPATH}/bin/app_standalone.exe')
 shutil.make_archive (f'{DISTPATH}/app_pkg', 'zip', f'{DISTPATH}/app_pkg')
+shutil.make_archive (f'{DISTPATH}/app_bin', 'zip', f'{DISTPATH}/bin')
 

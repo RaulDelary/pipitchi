@@ -82,7 +82,7 @@ RJ2
 
   column_d_generator = ws.iter_cols (min_col = 4, max_col = 4, min_row = 8, values_only = True)
   
-  valid_status = ['sucesso', 'parcial', 'falha', 'em construção', 'sem backup no dia']
+  valid_status = ['sucesso', 'parcial', 'falha', 'sem backup no dia']
 
   status_column = list (list (column_d_generator) [0])
   filtered_status = [str (x).lower () for x in status_column if str (x).lower () in valid_status]

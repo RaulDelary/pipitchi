@@ -88,7 +88,7 @@ RJ2
   filtered_status = [str (x).lower () for x in status_column if str (x).lower () in valid_status]
 
   total_units = len (filtered_status)
-  total_success = len ([x for x in filtered_status if x == 'sucesso'])
+  total_success = len ([x for x in filtered_status if x != 'falha'])
   
   total_success_pct = (total_success / total_units) * 100
 

@@ -2,6 +2,7 @@ import sys
 from datetime import datetime
 from openpyxl import load_workbook
 from emoji import emojize
+from emoji import EMOJI_DATA
 from requests import post
 from json import dumps
 from configparser import ConfigParser
@@ -13,19 +14,20 @@ ms_teams_webhook = None
 def __conditional_emoji (rule, value = 0):
   match rule:
     case 1:
-      return ':check_mark_button:' if value <= 79 else ':warning:' if value > 79 and value <= 90 else ':hollow_red_circle:'
+      return ':check_mark_button:' if value <= 79 else ':warning:' if value > 79 and value <= 90 else ':cross_mark:'
 
     case 2:
-      return ':hollow_red_circle:' if value <= 80 else ':warning:' if value > 80 and value <= 90 else ':check_mark_button:'
+      return ':cross_mark:' if value <= 80 else ':warning:' if value > 80 and value <= 90 else ':check_mark_button:'
 
     case 3:
-      return ':hollow_red_circle:' if value <= 10 else ':warning:' if value > 10 and value <= 19 else ':check_mark_button:'
+      return ':cross_mark:' if value <= 10 else ':warning:' if value > 10 and value <= 19 else ':check_mark_button:'
 
     case 4:
       return ':check_mark_button:' if value >= 95 else ':warning:'
 
     case 5:
-      return ':hollow_red_circle:' if 'Falha' in value else ':warning:' if 'Parcial' in value else ':check_mark_button:'
+      return ':cross_mark:' if 'falha' in value else ':warning:' if 'parcial' in value else ':warning:' if 'sem informação' in value else ':check_mark_button:'
+
 
 def __conditional_string (rule, value = 0):
   match rule:
@@ -82,13 +84,16 @@ RJ2
 
   column_d_generator = ws.iter_cols (min_col = 4, max_col = 4, min_row = 8, values_only = True)
   
-  valid_status = ['sucesso', 'parcial', 'falha', 'sem backup no dia']
+  valid_status = ['sucesso', 'parcial', 'falha', 'sem backup no dia', 'sem informação']
 
   status_column = list (list (column_d_generator) [0])
   filtered_status = [str (x).lower () for x in status_column if str (x).lower () in valid_status]
 
+  print (filtered_status)
+  __conditional_emoji (5, filtered_status)
+
   total_units = len (filtered_status)
-  total_success = len ([x for x in filtered_status if x != 'falha'])
+  total_success = len ([x for x in filtered_status if x not in ['falha', 'sem informação']])
   
   total_success_pct = (total_success / total_units) * 100
 

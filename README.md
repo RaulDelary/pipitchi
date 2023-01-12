@@ -83,12 +83,47 @@
   ❌ VERMELHO: Execução com sucesso menor que 95%
   ```
 
+  🔹 Execuções Unidades
+    ⚠️ Escopo: 77 Locais
+    :information_source: Sucesso: 98,70%
+    ❌ Hospital Yutaka Takeda, último backup: 24/12/2022
+
 - [ ] Unidades Escopo (Case 5)
 
   ```plain
   ✅ VERDE - Quando todas as unidades estiverem com sucesso
   ⚠️ AMARELO - Quando possuir 1 ou mais status parcial
   ❌ VERMELHO - Quando possuir 1 ou mais status com falha
+  ```
+
+- [ ] Status Unidades
+
+  ```plain
+  Quando as unidades apresentarem os status "Sucesso" ou "Sucesso e Sem backup no dia"
+
+  🔷 Execuções Unidades
+    ✅ Escopo: 77 Locais
+    ℹ️ Sucesso: 100.00%
+
+  Quando as unidades apresentarem os status "Sucesso - Parcial - Sem backup no dia"
+
+  🔷 Execuções Unidades
+    ⚠️ Escopo: 77 Locais
+    ℹ️ Sucesso: 100.00%
+
+  Quando uma ou mais unidade apresentarem o status "Sem informação"
+
+  🔷 Execuções Unidades
+    ⚠️ Escopo: 77 Locais
+    ℹ️ Sucesso: 98.00%
+      ⚠️Hospital Santa Marina, último backup conhecido: 01/01/2023
+
+  Quando uma ou mais unidade apresentarem o status "Falha"
+
+  🔷 Execuções Unidades
+    ❌ Escopo: 77 Locais
+    ℹ️ Sucesso: 98.00%
+      ❌Hospital Santa Marina, último backup: 01/01/2023
   ```
 
 - [ ] Cálculo Percentual Execuções Unidades

@@ -6,15 +6,20 @@ from emoji import EMOJI_DATA
 from requests import post
 from json import dumps
 from configparser import ConfigParser
+from unicodedata import normalize, category
 
 global ms_teams_webhook
 ms_teams_webhook = None
 
 
+def __normalize_string (input_string):
+  return ''.join (a for a in normalize ('NFD', input_string) if category (a) != 'Mn').lower ()
+
+
 def __conditional_emoji (rule, value = 0):
   match rule:
     case 1:
-      return ':check_mark_button:' if value <= 79 else ':warning:' if value > 79 and value <= 90 else ':cross_mark:'
+      return ':check_mark_button:' if value <= 79 else ':warning:' if value > 79 and value < 90 else ':cross_mark:'
 
     case 2:
       return ':cross_mark:' if value <= 80 else ':warning:' if value > 80 and value <= 90 else ':check_mark_button:'
@@ -23,10 +28,10 @@ def __conditional_emoji (rule, value = 0):
       return ':cross_mark:' if value <= 10 else ':warning:' if value > 10 and value <= 19 else ':check_mark_button:'
 
     case 4:
-      return ':check_mark_button:' if value >= 95 else ':warning:'
+      return ':check_mark_button:' if value >= 99 else ':warning:' if value >= 98.99 and value >= 95 else ':cross_mark:'
 
     case 5:
-      return ':cross_mark:' if 'falha' in value else ':warning:' if 'parcial' in value else ':warning:' if 'sem informação' in value else ':check_mark_button:'
+      return ':cross_mark:' if 'falha' in value else ':warning:' if 'parcial' in value else ':warning:' if 'sem informacao' in value else ':check_mark_button:'
 
 
 def __conditional_string (rule, value = 0):
@@ -40,6 +45,7 @@ def __conditional_string (rule, value = 0):
 
     case 3:
       return f'{value}%' if value > 10 else f'{value}%, processo de Cleaning em execução.'
+
 
 def format_message (ws):
   msg_template = '''
@@ -84,17 +90,14 @@ RJ2
 
   column_d_generator = ws.iter_cols (min_col = 4, max_col = 4, min_row = 8, values_only = True)
   
-  valid_status = ['sucesso', 'parcial', 'falha', 'sem backup no dia', 'sem informação']
+  valid_status = ['sucesso', 'parcial', 'falha', 'sem backup no dia', 'sem informacao']
 
-  status_column = list (list (column_d_generator) [0])
+  status_column = [ __normalize_string (str (x)) for x in list (column_d_generator) [0]]
+
   filtered_status = [str (x).lower () for x in status_column if str (x).lower () in valid_status]
 
-  print (filtered_status)
-  __conditional_emoji (5, filtered_status)
-
   total_units = len (filtered_status)
-  total_success = len ([x for x in filtered_status if x not in ['falha', 'sem informação']])
-  
+  total_success = len ([x for x in filtered_status if x not in ['falha', 'sem informacao']])
   total_success_pct = (total_success / total_units) * 100
 
   return msg_template.format (
@@ -131,6 +134,7 @@ RJ2
   em24 = ':information:', pct_sucesso_total = total_success_pct
 )
 
+
 def send_teams_message (message):
   if not ms_teams_webhook: return
   
@@ -140,6 +144,7 @@ def send_teams_message (message):
   if (response.status_code != 200):
     raise Exception ('Status Code da requisição diferente de 200.')
 
+
 def open_wb (file_name): # Retorna Worksheet
   try:
     wb = load_workbook (filename = file_name, data_only = True)
@@ -148,6 +153,7 @@ def open_wb (file_name): # Retorna Worksheet
     return f'FATAL: Não foi possível abrir o arquivo {file_name}. Verifique se o caminho do arquivo está correto.'
 
   return wb
+
 
 def cli ():
   try:

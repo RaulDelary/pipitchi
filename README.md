@@ -41,7 +41,7 @@
     ✅ Executado: 99.90%
 
   🔷 Execuções Unidades
-    ✅ Escopo: 77 Locais
+    ❌ Escopo: 77 Locais
     ℹ️ Sucesso: 98.00%
 
     ❌ XPTO, último backup: 31/12/2022
@@ -51,7 +51,7 @@
 
 ## :receipt: Thresholds Para Formatação Condicional
 
-- [ ] Infraestrutura Área Ocupada (Case 1)
+- [X] Infraestrutura Área Ocupada (Case 1)
 
   ```plain
   ✅ VERDE: Ocupação até 79% da área
@@ -59,7 +59,7 @@
   ❌ VERMELHO: Ocupação acima de 90%
   ```
 
-- [ ] Replicação AWS % Executado (Case 2)
+- [X] Replicação AWS % Executado (Case 2)
 
   ```plain
   ✅ VERDE: Valor acima de 90%
@@ -67,7 +67,7 @@
   ❌ VERMELHO: Valor até 80% da área
   ```
 
-- [ ] Replicação AWS % Área Livre (Case 3)
+- [X] Replicação AWS % Área Livre (Case 3)
 
   ```plain
   ✅ VERDE: Área maior ou igual a 20%
@@ -75,7 +75,7 @@
   ❌ VERMELHO: Área disponível igual ou menor a 10%
   ```
   
-- [ ] % Executado de JOBS DATA CENTER (Case 4)
+- [X] % Executado de JOBS DATA CENTER (Case 4)
 
   ```plain
   ✅ VERDE: Execução com sucesso igual ou maior a 99%
@@ -83,12 +83,7 @@
   ❌ VERMELHO: Execução com sucesso menor que 95%
   ```
 
-  🔹 Execuções Unidades
-    ⚠️ Escopo: 77 Locais
-    :information_source: Sucesso: 98,70%
-    ❌ Hospital Yutaka Takeda, último backup: 24/12/2022
-
-- [ ] Unidades Escopo (Case 5)
+- [X] Unidades Escopo (Case 5)
 
   ```plain
   ✅ VERDE - Quando todas as unidades estiverem com sucesso
@@ -96,35 +91,41 @@
   ❌ VERMELHO - Quando possuir 1 ou mais status com falha
   ```
 
-- [ ] Status Unidades
+<!-- - [ ] Status Unidades
 
-  ```plain
   Quando as unidades apresentarem os status "Sucesso" ou "Sucesso e Sem backup no dia"
 
+  ```plain
   🔷 Execuções Unidades
     ✅ Escopo: 77 Locais
     ℹ️ Sucesso: 100.00%
+  ```
 
-  Quando as unidades apresentarem os status "Sucesso - Parcial - Sem backup no dia"
+  Quando uma ou mais unidade apresentarem o status "Falha"
 
+  ```plain
+  🔷 Execuções Unidades
+    ❌ Escopo: 77 Locais
+    ℹ️ Sucesso: 98.00%
+      ❌ XPTO, último backup: 01/01/2023
+  ```
+
+  Quando uma ou mais unidade apresentarem o status "Parcial"
+
+  ```plain
   🔷 Execuções Unidades
     ⚠️ Escopo: 77 Locais
     ℹ️ Sucesso: 100.00%
+  ```
 
   Quando uma ou mais unidade apresentarem o status "Sem informação"
 
+  ```plain
   🔷 Execuções Unidades
     ⚠️ Escopo: 77 Locais
     ℹ️ Sucesso: 98.00%
       ⚠️Hospital Santa Marina, último backup conhecido: 01/01/2023
-
-  Quando uma ou mais unidade apresentarem o status "Falha"
-
-  🔷 Execuções Unidades
-    ❌ Escopo: 77 Locais
-    ℹ️ Sucesso: 98.00%
-      ❌Hospital Santa Marina, último backup: 01/01/2023
-  ```
+  ``` -->
 
 - [ ] Cálculo Percentual Execuções Unidades
 
@@ -148,7 +149,9 @@
   2. Extraia o arquivo ZIP em uma pasta de sua preferência (botão direito -> extrair tudo).
   3. Abra a pasta do projeto `pipitchi-main`.
   4. Em um espaço vazio, segure a tecla `shift` e clique com o `botão-direito` do mouse e clique na opção `Abrir janela do PowerShell aqui`.
+
   ![imagem-01](./.doc-images/01.png)
+
   5. Com a janela do Powershell aberta, iremos instalar as dependências necessárias para o scritp usando o comando `pip install -r .\requirements.txt`. Aguarde até que o Download das dependências seja realizado.
 
 ### Executando o Script

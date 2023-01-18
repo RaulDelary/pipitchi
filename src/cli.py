@@ -7,9 +7,72 @@ from requests import post
 from json import dumps
 from configparser import ConfigParser
 from unicodedata import normalize, category
+from itertools import count
 
 global ms_teams_webhook
 ms_teams_webhook = None
+
+
+
+def __parse_date (str_date):
+  parsed = ''
+
+  try:
+    parsed = datetime.strptime (str_date, '%Y-%m-%d %X').strftime ('%d/%m/%Y')
+    return parsed
+
+  except:
+    return str_date
+
+
+def __list_failed (ws, filtered_status):
+
+  msg = '\n:cross_mark: Falha no Backup\n'
+
+  if not 'falha' in filtered_status: return ''
+
+  for i in range (len (filtered_status)):
+    if filtered_status [i] == 'falha':
+      
+      line = f'   :cross_mark: {__parse_date (str (ws.cell (i + 8, 2).value))}, último backup full válido: {__parse_date (str (ws.cell (i + 8, 9).value))}\n'
+
+      msg += line
+
+  return msg
+
+
+def __list_no_info (ws, filtered_status):
+
+  msg = '\n:warning: Sem Informação de Backup\n'
+
+  if not 'sem informacao' in filtered_status: return ''
+
+  for i in range (len (filtered_status)):
+    if filtered_status [i] == 'sem informacao':
+      
+      line = f'   :warning: {__parse_date (str (ws.cell (i + 8, 2).value))}, último backup conhecido: {__parse_date (str (ws.cell (i + 8, 9).value))}\n'
+
+      msg += line
+
+  return msg
+
+
+def __list_partial (ws, filtered_status):
+
+  msg = '\n:warning: Backup Parcial\n'
+
+  if not 'parcial' in filtered_status: return ''
+
+  for i in range (len (filtered_status)):
+    if filtered_status [i] == 'parcial':
+      # print (filtered_status)
+      print (i + 8, filtered_status [i])
+      
+      line = f'   :warning: {__parse_date (str (ws.cell (i + 8, 2).value))}, último backup full válido: {__parse_date (str (ws.cell (i + 8, 9).value))}\n'
+
+      msg += line
+
+  return msg
 
 
 def __normalize_string (input_string):
@@ -86,19 +149,17 @@ RJ2
 {em22} Execuções Unidades
   {em23} Escopo: {count_units} Locais
   {em24} Sucesso: {pct_sucesso_total:.2f}%
+  {list_failed}{list_no_info}{list_partial}
 '''
 
   column_d_generator = ws.iter_cols (min_col = 4, max_col = 4, min_row = 8, values_only = True)
-  
   valid_status = ['sucesso', 'parcial', 'falha', 'sem backup no dia', 'sem informacao']
-
   status_column = [ __normalize_string (str (x)) for x in list (column_d_generator) [0]]
-
   filtered_status = [str (x).lower () for x in status_column if str (x).lower () in valid_status]
-
   total_units = len (filtered_status)
-  total_success = len ([x for x in filtered_status if x not in ['falha', 'sem informacao']])
+  total_success = len ([x for x in filtered_status if x not in ['falha', 'sem informacao', 'parcial']])
   total_success_pct = (total_success / total_units) * 100
+
 
   return msg_template.format (
   em01 = ':stethoscope:',
@@ -131,7 +192,14 @@ RJ2
 
   em22 = ':large_blue_diamond:',
   em23 = __conditional_emoji (5, filtered_status), count_units = total_units,
-  em24 = ':information:', pct_sucesso_total = total_success_pct
+  em24 = ':information:', pct_sucesso_total = total_success_pct,
+
+  list_failed = __list_failed (ws, status_column),
+  list_no_info = __list_no_info (ws, status_column),
+  list_partial = __list_partial (ws, status_column)
+
+  # list_failed = __list_failed (w, filtered_status),
+  # list_warning = __list_warning ()
 )
 
 
@@ -201,7 +269,6 @@ except IOError:
   
   with (open ('./app.ini', 'w', encoding = 'UTF-8')) as config_file:
     config_file.write (config_file_template)
-
 
 
 

@@ -65,9 +65,6 @@ def __list_partial (ws, filtered_status):
 
   for i in range (len (filtered_status)):
     if filtered_status [i] == 'parcial':
-      # print (filtered_status)
-      print (i + 8, filtered_status [i])
-      
       line = f'   :warning: {__parse_date (str (ws.cell (i + 8, 2).value))}, último backup full válido: {__parse_date (str (ws.cell (i + 8, 9).value))}\n'
 
       msg += line

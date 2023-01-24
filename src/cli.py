@@ -6,8 +6,7 @@ from emoji import EMOJI_DATA
 from requests import post
 from json import dumps
 from configparser import ConfigParser
-from unicodedata import normalize, category
-from itertools import count
+from unicodedata import normalize, category, combining
 
 global ms_teams_webhook
 ms_teams_webhook = None
@@ -73,7 +72,10 @@ def __list_partial (ws, filtered_status):
 
 
 def __normalize_string (input_string):
-  return ''.join (a for a in normalize ('NFD', input_string) if category (a) != 'Mn').lower ()
+  a = ''.join (a for a in normalize ('NFKD', input_string.lower ().strip ()) if category (a) != 'Mn')
+  # b = ''.join (a for a in normalize ('NFKD', input_string.lower ().strip ()) if not combining (a))
+  
+  return a
 
 
 def __conditional_emoji (rule, value = 0):

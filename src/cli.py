@@ -149,6 +149,10 @@ RJ2
   {em23} Escopo: {count_units} Locais
   {em24} Sucesso: {pct_sucesso_total:.2f}%
   {list_failed}{list_no_info}{list_partial}
+
+{em25} Backup BI
+  {em26} % Sucesso: {executado_bi}%
+  {em27} Replicação AWS: {rep_aws_bi}%
 '''
 
   column_a_generator = ws.iter_cols (min_col = 1, max_col = 1, min_row = 1, values_only = True)
@@ -200,10 +204,11 @@ RJ2
 
   list_failed = __list_failed (ws, status_column),
   list_no_info = __list_no_info (ws, status_column),
-  list_partial = __list_partial (ws, status_column)
+  list_partial = __list_partial (ws, status_column),
 
-  # list_failed = __list_failed (w, filtered_status),
-  # list_warning = __list_warning ()
+  em25 = ':large_blue_diamond:',
+  em26 = __conditional_emoji (4, ws ['E91'].value * 100), executado_bi = ws ['E91'].value * 100,
+  em27 = __conditional_emoji (4, ws ['G91'].value * 100), rep_aws_bi = ws ['G91'].value * 100
 )
 
 

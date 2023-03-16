@@ -45,6 +45,10 @@
     ℹ️ Sucesso: 98.00%
 
     ❌ XPTO, último backup: 31/12/2022
+
+  🔷Backup BI 
+     ✅ % Sucesso: 100% 
+     ✅Replicação AWS: 100%
   ```
 
 </details>
@@ -75,7 +79,7 @@
   ❌ VERMELHO: Área disponível igual ou menor a 10%
   ```
   
-- [X] % Executado de JOBS DATA CENTER (Case 4)
+- [X] % Executado de JOBS DATA CENTER e BI (Executados e Replicação AWS) (Case 4)
 
   ```plain
   ✅ VERDE: Execução com sucesso igual ou maior a 99%

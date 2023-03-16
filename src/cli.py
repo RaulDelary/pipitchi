@@ -151,9 +151,14 @@ RJ2
   {list_failed}{list_no_info}{list_partial}
 '''
 
-  column_d_generator = ws.iter_cols (min_col = 4, max_col = 4, min_row = 8, values_only = True)
+  column_a_generator = ws.iter_cols (min_col = 1, max_col = 1, min_row = 1, values_only = True)
+  column_a_values = [ __normalize_string (str (x)) for x in list (column_a_generator) [0] ]
+  un_idx = column_a_values.index ('unidade de negocio') + 3
+  bi_idx = column_a_values.index ('bi')
+
+  column_d_generator = ws.iter_cols (min_col = 4, max_col = 4, min_row = un_idx, max_row = bi_idx, values_only = True)
   valid_status = ['sucesso', 'parcial', 'falha', 'sem backup no dia', 'sem informacao']
-  status_column = [ __normalize_string (str (x)) for x in list (column_d_generator) [0]]
+  status_column = [ __normalize_string (str (x)) for x in list (column_d_generator) [0] ]
   filtered_status = [str (x).lower () for x in status_column if str (x).lower () in valid_status]
   total_units = len (filtered_status)
   total_success = len ([x for x in filtered_status if x not in ['falha', 'sem informacao', 'parcial']])
